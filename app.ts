@@ -1,4 +1,4 @@
-/// <reference path="phaser.d.ts"/>
+/// <reference path="libs/phaser.d.ts"/>
 
 class SnakeGame {
     private game:Phaser.Game;
@@ -6,9 +6,7 @@ class SnakeGame {
     planodefundo:Phaser.TilemapLayer;
     camadaJogo:Phaser.TilemapLayer;
     camadaBG:Phaser.TileSprite;
-
-    cabeca;
-
+    cobra;
     constructor() {
         this.game = new Phaser.Game(800, 600, Phaser.AUTO, 'content', {preload: this.preload, create: this.create});
     }
@@ -20,6 +18,7 @@ class SnakeGame {
         this.game.load.image('planodefundo', 'img/Background.png')
     }
 
+
     create() {
         this.camadaBG = this.game.add.tileSprite(0, 0, 800, 600, 'planodefundo');
 
@@ -29,9 +28,9 @@ class SnakeGame {
 
         this.camadaJogo = this.mapa.createLayer('Camada de Tiles 2');
 
-        this.cabeca = this.game.add.sprite(100, 100, 'body');
-        this.cabeca.animations.add('muda', [1, 2, 3, 4, 5, 6]);
-        this.cabeca.animations.play('muda', 5, true);
+        this.cobra = new CobraModule.Cobra(this.game,'head', 'body');
+        this.cobra.inicia_movimento();
+
     }
 
 }
@@ -39,5 +38,4 @@ class SnakeGame {
 window.onload = () => {
 
     var game = new SnakeGame();
-
 };
