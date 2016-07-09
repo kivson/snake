@@ -1,7 +1,7 @@
 /**
  * Created by kivson on 06/07/16.
  */
-/// <reference path="libs/phaser.d.ts"/>
+/// <reference path="../libs/phaser.d.ts"/>
 
 module CobraModule {
 
@@ -11,7 +11,7 @@ module CobraModule {
 
         private sprite_pool:Phaser.Group;
         private corpoSprite:Phaser.Sprite;
-        private sprites_corpo:Phaser.Sprite[] = new Array();
+        private sprites_corpo:Phaser.Sprite[] = [];
 
         constructor(private game:Phaser.Game, private corpoKey:string, pos_x:number, pos_y:number) {
 
@@ -49,6 +49,8 @@ module CobraModule {
     export class Cobra {
 
         public intervalo_movimento:number = 500;
+
+        private comeu:boolean = false;
         private cabecaSprite:Phaser.Sprite;
 
 
@@ -123,18 +125,18 @@ module CobraModule {
         move(){
 
             if (this.direcaoDesejada == Direcao.DIREITA){
-                this.game.add.tween(this.cabecaSprite).to({x: "+" + this.cabecaSprite.width}, this.intervalo_movimento, ANIMACAO_EASE, true);
+                this.game.add.tween(this.cabecaSprite).to({x: "+" + this.cabecaSprite.width}, this.intervalo_movimento/2, ANIMACAO_EASE, true);
             }
             if (this.direcaoDesejada == Direcao.ESQUERDA){
-                this.game.add.tween(this.cabecaSprite).to({x: "-" + this.cabecaSprite.width}, this.intervalo_movimento, ANIMACAO_EASE, true);
+                this.game.add.tween(this.cabecaSprite).to({x: "-" + this.cabecaSprite.width}, this.intervalo_movimento/2, ANIMACAO_EASE, true);
             }
             if (this.direcaoDesejada == Direcao.CIMA){
-                this.game.add.tween(this.cabecaSprite).to({y: "-" + this.cabecaSprite.width}, this.intervalo_movimento, ANIMACAO_EASE, true);
+                this.game.add.tween(this.cabecaSprite).to({y: "-" + this.cabecaSprite.width}, this.intervalo_movimento/2, ANIMACAO_EASE, true);
             }
             if (this.direcaoDesejada == Direcao.BAIXO){
-                this.game.add.tween(this.cabecaSprite).to({y: "+" + this.cabecaSprite.width}, this.intervalo_movimento, ANIMACAO_EASE, true);
+                this.game.add.tween(this.cabecaSprite).to({y: "+" + this.cabecaSprite.width}, this.intervalo_movimento/2, ANIMACAO_EASE, true);
             }
-            this.corpo.move(this.cabecaSprite.x, this.cabecaSprite.y, this.intervalo_movimento);
+            this.corpo.move(this.cabecaSprite.x, this.cabecaSprite.y, this.intervalo_movimento/2);
             this.direcaoAtual = this.direcaoDesejada;
         }
 
