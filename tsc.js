@@ -44,6 +44,8 @@ var CobraModule;
             this.corpoSprite.kill();
             this.sprite_pool = game.add.group();
             this.sprite_pool.createMultiple(tamanho_pool, this.corpoKey);
+            this.sprite_pool.callAll('animations.add', 'animations', 'muda', [0, 1, 2, 3, 4], 5, true);
+            this.sprite_pool.callAll('animations.play', 'animations', 'muda');
             for (var i = 0; i < 5; i++) {
                 var sprite = this.sprite_pool.getFirstExists(false);
                 sprite.reset(pos_x - (i * sprite.width), pos_y);
@@ -77,7 +79,7 @@ var CobraModule;
             this.direcaoAtual = Direcao.DIREITA;
             this.direcaoDesejada = Direcao.DIREITA;
             this.cabecaSprite = this.game.add.sprite(pos_x, pos_y, this.cabecaKey);
-            this.cabecaSprite.animations.add('muda', [1, 2, 3, 5]);
+            this.cabecaSprite.animations.add('muda', [0, 1, 2, 3, 4]);
             this.cabecaSprite.animations.play('muda', 5, true);
             this.corpo = new CorpoCobra(this.game, this.corpoKey, pos_x - this.cabecaSprite.width, pos_y);
             this.bind_input();
