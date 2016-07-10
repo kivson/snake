@@ -33,6 +33,11 @@ module CobraModule {
             }
         }
 
+        checa_overlap(sprite:Phaser.Sprite){
+            // return this.sprites_corpo.some((elem)=>{return Phaser.Rectangle.intersects((<any>sprite).getBounds(), (<any>elem).getBounds())})
+            return this.sprites_corpo.some((elem)=>{return sprite.x == elem.x && sprite.y == elem.y})
+        }
+
         move(new_x, new_y, tempo_animacao){
             for (let i = this.sprites_corpo.length -1; i>0; i--){
                 this.game.add.tween(this.sprites_corpo[i]).to({x:this.sprites_corpo[i-1].x ,y: this.sprites_corpo[i-1].y}, tempo_animacao, ANIMACAO_EASE, true);
@@ -56,10 +61,10 @@ module CobraModule {
         private cabecaSprite:Phaser.Sprite;
 
 
-        private direcaoAtual:Direcao = Direcao.DIREITA;
-        private direcaoDesejada:Direcao = Direcao.DIREITA;
-
         private corpo:CorpoCobra;
+        private direcaoAtual:Direcao = Direcao.DIREITA;
+
+        private direcaoDesejada:Direcao = Direcao.DIREITA;
 
         constructor(private game:Phaser.Game, private cabecaKey:string, private corpoKey:string, pos_x:number = 200, pos_y:number = 100) {
 
@@ -118,11 +123,18 @@ module CobraModule {
             });
         }
 
+
+        check_out_of_bounds(b: Phaser.Rectangle){
+            return !b.containsRect((this.cabecaSprite as any).getBounds())
+        }
+
         inicia_movimento() {
             this.game.time.events.loop(this.intervalo_movimento, this.move, this);
         }
 
-
+        checa_colisao_corpo(){
+            return this.corpo.checa_overlap(this.cabecaSprite);
+        }
 
         move(){
 

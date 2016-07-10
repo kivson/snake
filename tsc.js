@@ -1,7 +1,11 @@
 /// <reference path="../libs/phaser.d.ts"/>
 var SnakeGame = (function () {
     function SnakeGame() {
-        this.game = new Phaser.Game(800, 600, Phaser.AUTO, 'content', { preload: this.preload, create: this.create });
+        this.game = new Phaser.Game(800, 600, Phaser.AUTO, 'content', {
+            preload: this.preload,
+            create: this.create,
+            update: this.update
+        });
     }
     SnakeGame.prototype.preload = function () {
         this.game.load.tilemap('mapa', 'img/tilemap.json', null, Phaser.Tilemap.TILED_JSON);
@@ -16,11 +20,20 @@ var SnakeGame = (function () {
         this.mapa.addTilesetImage('Head-Sprite', 'head');
         this.mapa.addTilesetImage('Body-Sprite', 'body');
         this.camadaJogo = this.mapa.createLayer('Camada de Tiles 2');
+        this.campo_da_cobra = new Phaser.Rectangle(18, 31, 560, 560);
         this.cobra = new CobraModule.Cobra(this.game, 'head', 'body', 218, 231);
         this.cobra.inicia_movimento();
         this.quiz = new ModuleQuiz.Quiz(this.game, 'numeros', 620, 120);
         this.quiz.mostra();
         // this.quiz.mostra();
+    };
+    SnakeGame.prototype.update = function () {
+        if (this.cobra.checa_colisao_corpo()) {
+            console.log('BATEU');
+        }
+        if (this.cobra.check_out_of_bounds(this.campo_da_cobra)) {
+            console.log('FORA');
+        }
     };
     return SnakeGame;
 }());
@@ -52,6 +65,10 @@ var CobraModule;
                 this.sprites_corpo.push(sprite);
             }
         }
+        CorpoCobra.prototype.checa_overlap = function (sprite) {
+            // return this.sprites_corpo.some((elem)=>{return Phaser.Rectangle.intersects((<any>sprite).getBounds(), (<any>elem).getBounds())})
+            return this.sprites_corpo.some(function (elem) { return sprite.x == elem.x && sprite.y == elem.y; });
+        };
         CorpoCobra.prototype.move = function (new_x, new_y, tempo_animacao) {
             for (var i = this.sprites_corpo.length - 1; i > 0; i--) {
                 this.game.add.tween(this.sprites_corpo[i]).to({ x: this.sprites_corpo[i - 1].x, y: this.sprites_corpo[i - 1].y }, tempo_animacao, ANIMACAO_EASE, true);
@@ -127,8 +144,14 @@ var CobraModule;
                 }
             });
         };
+        Cobra.prototype.check_out_of_bounds = function (b) {
+            return !b.containsRect(this.cabecaSprite.getBounds());
+        };
         Cobra.prototype.inicia_movimento = function () {
             this.game.time.events.loop(this.intervalo_movimento, this.move, this);
+        };
+        Cobra.prototype.checa_colisao_corpo = function () {
+            return this.corpo.checa_overlap(this.cabecaSprite);
         };
         Cobra.prototype.move = function () {
             if (this.direcaoDesejada == Direcao.DIREITA) {

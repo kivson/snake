@@ -1,17 +1,23 @@
 /// <reference path="../libs/phaser.d.ts"/>
 
+
 class SnakeGame {
     private game:Phaser.Game;
     mapa:Phaser.Tilemap;
     planodefundo:Phaser.TilemapLayer;
     camadaJogo:Phaser.TilemapLayer;
     camadaBG:Phaser.TileSprite;
-    cobra;
-    quiz;
-    
+    cobra:CobraModule.Cobra;
+    quiz:ModuleQuiz.Quiz;
+    campo_da_cobra:Phaser.Rectangle;
+
     
     constructor() {
-        this.game = new Phaser.Game(800, 600, Phaser.AUTO, 'content', {preload: this.preload, create: this.create});
+        this.game = new Phaser.Game(800, 600, Phaser.AUTO, 'content', {
+            preload: this.preload,
+            create: this.create,
+            update: this.update
+        });
     }
 
     preload() {
@@ -32,15 +38,26 @@ class SnakeGame {
 
         this.camadaJogo = this.mapa.createLayer('Camada de Tiles 2');
 
-        this.cobra = new CobraModule.Cobra(this.game,'head', 'body',218,231);
+        this.campo_da_cobra = new Phaser.Rectangle(18, 31, 560, 560);
+
+        this.cobra = new CobraModule.Cobra(this.game, 'head', 'body', 218, 231);
         this.cobra.inicia_movimento();
-        
+
         this.quiz = new ModuleQuiz.Quiz(this.game, 'numeros', 620, 120);
         this.quiz.mostra();
         // this.quiz.mostra();
 
     }
 
+
+    update() {
+        if (this.cobra.checa_colisao_corpo()) {
+            console.log('BATEU')
+        }
+        if (this.cobra.check_out_of_bounds(this.campo_da_cobra)){
+            console.log('FORA')
+        }
+    }
 }
 
 window.onload = () => {
