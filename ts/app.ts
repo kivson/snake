@@ -16,7 +16,8 @@ class SnakeGame {
         this.game = new Phaser.Game(800, 600, Phaser.AUTO, 'content', {
             preload: this.preload,
             create: this.create,
-            update: this.update
+            update: this.update,
+            render: this.render
         });
     }
 
@@ -30,6 +31,10 @@ class SnakeGame {
 
 
     create() {
+
+        //DEBUG/PROFILE
+        this.game.time.advancedTiming = true;
+
         this.camadaBG = this.game.add.tileSprite(0, 0, 800, 600, 'planodefundo');
 
         this.mapa = this.game.add.tilemap('mapa');
@@ -57,6 +62,10 @@ class SnakeGame {
         if (this.cobra.check_out_of_bounds(this.campo_da_cobra)){
             console.log('FORA')
         }
+    }
+
+    render(){
+        this.game.debug.text("FPS: "+ this.game.time.fps,32,32);
     }
 }
 
